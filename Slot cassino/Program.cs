@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Slot;
+namespace Slot_cassino;
 
 class Program
 {
@@ -68,13 +68,13 @@ class Program
             {
                 Jogador jogador = new Jogador("Adriel", 0);
                 jogador.AdicionarDinheiro(saldo);
-                Apostar(saldo, jogador);
+                Apostar(jogador);
             }
         }
         Menu();
     }
 
-    static void Apostar(int saldo, Jogador jogador)
+    static void Apostar(Jogador jogador)
     {
         while (true)
         {
@@ -140,7 +140,7 @@ class Program
             }
             else if (onScreen[aleatorio] == barBar.Nome)
             {
-                Recompensa(valorAposta, barBar.Multiplicador, jogador);;
+                Recompensa(valorAposta, barBar.Multiplicador, jogador);
             }
             else if (onScreen[aleatorio] == barBarBar.Nome)
             {

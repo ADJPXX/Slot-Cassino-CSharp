@@ -1,4 +1,4 @@
-﻿namespace Slot;
+﻿namespace Slot_cassino;
 
 class Jogador
 {

@@ -10,7 +10,7 @@ BOOST = 10x
 777 = 50x
 */
 
-namespace Slot;
+namespace Slot_cassino;
 
 class Slot
 {
