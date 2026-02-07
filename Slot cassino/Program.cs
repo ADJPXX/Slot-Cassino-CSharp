@@ -99,9 +99,14 @@ class Program
                 jogador.Bet(valorAposta);
                 Console.Clear();
                 AtualizarTela(valorAposta, jogador);
-                Console.WriteLine($"VOCÊ APOSTOU ${valorAposta}");
-                Console.WriteLine($"DINHEIRO ATUAL: {jogador.Saldo}");
+                Console.WriteLine($"VALOR APOSTA ${valorAposta}");
+                Console.WriteLine($"DINHEIRO ATUAL: ${jogador.Saldo}");
+                Console.WriteLine("\nAPERTE ENTER PARA JOGAR NOVAMENTE!");
                 Console.ReadKey();
+                if (jogador.Saldo == 0)
+                {
+                    break;
+                }
             }
         }
         NovoJogo();
@@ -124,72 +129,45 @@ class Program
         int aleatorio3 = rnd.Next(0, onScreen.Count);
 
         Console.WriteLine("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
-        Console.Write($"{onScreen[aleatorio]}   ----------  {onScreen[aleatorio2]}  ----------  {onScreen[aleatorio3]}");
-        Console.WriteLine("\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+        Console.Write($"          {onScreen[aleatorio]}   ----------  {onScreen[aleatorio2]}  ----------  {onScreen[aleatorio3]}");
+        Console.WriteLine("\n\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
         if (onScreen[aleatorio] == onScreen[aleatorio2] && onScreen[aleatorio2] == onScreen[aleatorio3])
         {
             if (onScreen[aleatorio] == bar.Nome)
             {
-                int ganho = valorAposta * bar.Multiplicador;
-
-                jogador.AdicionarDinheiro(ganho);
-
-                int dinheiroAntes = jogador.Saldo - ganho;
-
-                Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {bar.Multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
+                Recompensa(valorAposta, bar.Multiplicador, jogador);
             }
             else if (onScreen[aleatorio] == barBar.Nome)
             {
-                int ganho = valorAposta * barBar.Multiplicador;
-
-                jogador.AdicionarDinheiro(ganho);
-
-                int dinheiroAntes = jogador.Saldo - ganho;
-
-                Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {barBar.Multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
+                Recompensa(valorAposta, barBar.Multiplicador, jogador);;
             }
             else if (onScreen[aleatorio] == barBarBar.Nome)
             {
-                int ganho = valorAposta * barBarBar.Multiplicador;
-
-                jogador.AdicionarDinheiro(ganho);
-
-                int dinheiroAntes = jogador.Saldo - ganho;
-
-                Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {barBarBar.Multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
+                Recompensa(valorAposta, barBarBar.Multiplicador, jogador);
             }
             else if (onScreen[aleatorio] == boost.Nome)
             {
-                int ganho = valorAposta * boost.Multiplicador;
-
-                jogador.AdicionarDinheiro(ganho);
-
-                int dinheiroAntes = jogador.Saldo - ganho;
-
-                Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {boost.Multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
+                Recompensa(valorAposta, boost.Multiplicador, jogador);
             }
             else if (onScreen[aleatorio] == tripleSeven.Nome)
             {
-                int ganho = valorAposta * tripleSeven.Multiplicador;
-
-                jogador.AdicionarDinheiro(ganho);
-
-                int dinheiroAntes = jogador.Saldo - ganho;
-
-                Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {tripleSeven.Multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-                Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
+                Recompensa(valorAposta, tripleSeven.Multiplicador, jogador);
             }
         }
+    }
+
+    static void Recompensa(int valorAposta, int multiplicador, Jogador jogador)
+    {
+        int ganho = valorAposta * multiplicador;
+
+        jogador.AdicionarDinheiro(ganho);
+
+        int dinheiroAntes = jogador.Saldo - ganho;
+
+        Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {multiplicador}x, APOSTANDO ${valorAposta} DA UM GANHO DE ${ganho}");
+        Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
+        Console.WriteLine($"DINHEIRO ANTES DO GANHO ${jogador.Saldo}");
     }
 
 
