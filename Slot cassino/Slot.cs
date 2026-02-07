@@ -8,7 +8,6 @@ BAR BAR BAR = 6x
 BOOST = 10x
 
 777 = 50x
-
 */
 
 namespace Slot;
