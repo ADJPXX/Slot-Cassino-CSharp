@@ -156,7 +156,7 @@ class Program
         Console.Write($"          {onScreen[aleatorio]}   ----------  {onScreen[aleatorio2]}  ----------  {onScreen[aleatorio3]}");
         Console.WriteLine("\n\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-        if (onScreen[aleatorio] != onScreen[aleatorio2] && onScreen[aleatorio2] != onScreen[aleatorio3])
+        if (onScreen[aleatorio] == onScreen[aleatorio2] && onScreen[aleatorio2] == onScreen[aleatorio3])
         {
             if (onScreen[aleatorio] == bar.Nome)
             {
