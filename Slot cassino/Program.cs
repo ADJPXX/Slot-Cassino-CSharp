@@ -55,6 +55,7 @@ class Program
             int saldo = LerInt("DIGITE O VALOR QUE VOCÊ QUER ADICIONAR NA SUA CARTEIRA: $");
             if (saldo == 0)
             {
+                Menu();
                 break;
             }
 
@@ -69,9 +70,9 @@ class Program
                 Jogador jogador = new Jogador("Adriel", 0);
                 jogador.AdicionarDinheiro(saldo);
                 Apostar(jogador);
+                break;
             }
         }
-        Menu();
     }
 
     static void Apostar(Jogador jogador)
@@ -85,6 +86,7 @@ class Program
 
             if (valorAposta == 0)
             {
+                NovoJogo();
                 break;
             }
 
@@ -96,21 +98,42 @@ class Program
             }
             else
             {
-                jogador.Bet(valorAposta);
                 Console.Clear();
-                AtualizarTela(valorAposta, jogador);
-                Console.WriteLine($"VALOR APOSTA ${valorAposta}");
-                Console.WriteLine($"DINHEIRO ATUAL: ${jogador.Saldo}");
-                Console.WriteLine("\nAPERTE ENTER PARA JOGAR NOVAMENTE!");
-                Console.ReadKey();
-                if (jogador.Saldo == 0)
-                {
-                    break;
-                }
+                Apostando(jogador, valorAposta);
+                break;
             }
         }
-        NovoJogo();
     }
+
+    static void Apostando(Jogador jogador, int valorAposta)
+    {
+        while (true)
+        {
+            Console.WriteLine("APERTE 'S' PARA SAIR.");
+            Console.WriteLine($"VALOR APOSTA ${valorAposta}");
+            Console.WriteLine($"DINHEIRO ATUAL: ${jogador.Saldo}");
+            Console.WriteLine("\nAPERTE ENTER PARA JOGAR!");
+            ConsoleKeyInfo key = Console.ReadKey();
+            if (key.Key == ConsoleKey.S)
+            {
+                Apostar(jogador);
+                break;
+            }
+
+            jogador.Bet(valorAposta);
+            AtualizarTela(valorAposta, jogador);
+
+            if (jogador.Saldo == 0)
+            {
+                Console.WriteLine("SEU DINHEIRO ACABOU! VOLTANDO PARA A TELA DE DEPÓSITO");
+                Thread.Sleep(3000);
+                NovoJogo();
+                break;
+            }
+
+        }
+    }
+
 
     static void AtualizarTela(int valorAposta, Jogador jogador)
     {
@@ -128,11 +151,12 @@ class Program
         int aleatorio2 = rnd.Next(0, onScreen.Count);
         int aleatorio3 = rnd.Next(0, onScreen.Count);
 
+        Console.Clear();
         Console.WriteLine("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
         Console.Write($"          {onScreen[aleatorio]}   ----------  {onScreen[aleatorio2]}  ----------  {onScreen[aleatorio3]}");
         Console.WriteLine("\n\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-        if (onScreen[aleatorio] == onScreen[aleatorio2] && onScreen[aleatorio2] == onScreen[aleatorio3])
+        if (onScreen[aleatorio] != onScreen[aleatorio2] && onScreen[aleatorio2] != onScreen[aleatorio3])
         {
             if (onScreen[aleatorio] == bar.Nome)
             {
