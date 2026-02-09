@@ -9,7 +9,6 @@ class Program
 
     enum Estado
     {
-        AtualizarTela,
         Menu,
         NovoJogo,
         Apostar,
@@ -27,7 +26,7 @@ class Program
     static Slot _boost = new Slot("BOOST", 10);
     static Slot _tripleSeven = new Slot("777", 50);
 
-    static List<string> _onScreen = [_bar.Nome, _barBar.Nome, _barBarBar.Nome, _boost.Nome, _tripleSeven.Nome];
+    static List<Slot> _onScreen = [_bar, _barBar, _barBarBar, _boost, _tripleSeven];
 
     static Jogador _jogador = new Jogador("Adriel", 0);
 
@@ -63,6 +62,7 @@ class Program
                 Console.Clear();
                 Console.WriteLine("OBRIGADO POR USAR O PROGRAMA!");
                 Thread.Sleep(3000);
+                _estado = Estado.Sair;
                 return;
             }
 
@@ -176,33 +176,18 @@ class Program
         int aleatorio2 = _rnd.Next(0, _onScreen.Count);
         int aleatorio3 = _rnd.Next(0, _onScreen.Count);
 
+        Slot sorteio1 = _onScreen[aleatorio];
+        Slot sorteio2 = _onScreen[aleatorio2];
+        Slot sorteio3 = _onScreen[aleatorio3];
+
         Console.Clear();
         Console.WriteLine("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
-        Console.Write($"          {_onScreen[aleatorio]}   ----------  {_onScreen[aleatorio2]}  ----------  {_onScreen[aleatorio3]}");
+        Console.Write($"          {sorteio1.Nome}   ----------  {sorteio2.Nome}  ----------  {sorteio3.Nome}");
         Console.WriteLine("\n\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-        if (_onScreen[aleatorio] == _onScreen[aleatorio2] && _onScreen[aleatorio2] == _onScreen[aleatorio3])
+        if (sorteio1 == sorteio2 && sorteio2 == sorteio3)
         {
-            if (_onScreen[aleatorio] == _bar.Nome)
-            {
-                Recompensa(_bar.Multiplicador);
-            }
-            else if (_onScreen[aleatorio] == _barBar.Nome)
-            {
-                Recompensa(_barBar.Multiplicador);
-            }
-            else if (_onScreen[aleatorio] == _barBarBar.Nome)
-            {
-                Recompensa(_barBarBar.Multiplicador);
-            }
-            else if (_onScreen[aleatorio] == _boost.Nome)
-            {
-                Recompensa(_boost.Multiplicador);
-            }
-            else if (_onScreen[aleatorio] == _tripleSeven.Nome)
-            {
-                Recompensa(_tripleSeven.Multiplicador);
-            }
+            Recompensa(sorteio1.Multiplicador);
         }
     }
 
@@ -216,7 +201,7 @@ class Program
 
         Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {multiplicador}x, APOSTANDO ${_valorAposta} DA UM GANHO DE ${ganho}");
         Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-        Console.WriteLine($"DINHEIRO ANTES DO GANHO ${_jogador.Saldo}\n");
+        Console.WriteLine($"DINHEIRO DEPOIS DO GANHO ${_jogador.Saldo}\n");
     }
 
 
