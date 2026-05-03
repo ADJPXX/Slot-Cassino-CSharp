@@ -28,7 +28,7 @@ class Program
 
     static List<Slot> _onScreen = [_bar, _barBar, _barBarBar, _boost, _tripleSeven];
 
-    static Jogador _jogador = new Jogador("Adriel", 0);
+    static Jogador _jogador = new Jogador("Adriel", -100000);
 
     public static void Main(string[] args)
     {
