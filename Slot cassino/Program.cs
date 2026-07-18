@@ -1,34 +1,22 @@
-﻿using System;
-using System.Threading;
+﻿namespace Slot_cassino;
 
-namespace Slot_cassino;
-
-class Program
+public static class Program
 {
-    static int _valorAposta;
+    private static int _valorAposta;
 
-    enum Estado
-    {
-        Menu,
-        NovoJogo,
-        Apostar,
-        Apostando,
-        Sair
-    }
+    private static Estado _estado = Estado.Menu;
 
-    static Estado _estado = Estado.Menu;
+    private static readonly Random Rnd = new Random();
 
-    static Random _rnd = new Random();
+    private static readonly Slot Bar = new Slot("BAR", 2);
+    private static readonly Slot BarBar = new Slot("BAR BAR", 4);
+    private static readonly Slot BarBarBar = new Slot("BAR BAR BAR", 6);
+    private static readonly Slot Boost = new Slot("BOOST", 10);
+    private static readonly Slot TripleSeven = new Slot("777", 50);
 
-    static Slot _bar = new Slot("BAR", 2);
-    static Slot _barBar = new Slot("BAR BAR", 4);
-    static Slot _barBarBar = new Slot("BAR BAR BAR", 6);
-    static Slot _boost = new Slot("BOOST", 10);
-    static Slot _tripleSeven = new Slot("777", 50);
+    private static readonly List<Slot> OnScreen = [Bar, BarBar, BarBarBar, Boost, TripleSeven];
 
-    static List<Slot> _onScreen = [_bar, _barBar, _barBarBar, _boost, _tripleSeven];
-
-    static Jogador _jogador = new Jogador("Adriel", -100000);
+    private static readonly Jogador Jogador = new Jogador("Adriel", -100000);
 
     public static void Main(string[] args)
     {
@@ -41,11 +29,11 @@ class Program
                 case Estado.Apostar: Apostar(); break;
                 case Estado.Apostando: Apostando(); break;
             }
-
         }
     }
 
-    public static void Menu()
+    
+    private static void Menu()
     {
         while (true)
         {
@@ -55,7 +43,7 @@ class Program
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("[ 1 ]NOVO JOGO");
             Console.WriteLine("[ 0 ]SAIR");
-            int opcao = LerInt("ESCOLHA SUA OPÇÃO: ");
+            var opcao = LerInt("ESCOLHA SUA OPÇÃO: ");
 
             if (opcao == 0)
             {
@@ -82,13 +70,13 @@ class Program
         }
     }
 
-    public static void NovoJogo()
+    private static void NovoJogo()
     {
         while (true)
         {
             Console.Clear();
             Console.WriteLine("DIGITE 0 (ZERO) PARA SAIR.\n");
-            int saldo = LerInt("DIGITE O VALOR QUE VOCÊ QUER ADICIONAR NA SUA CARTEIRA: $");
+            var saldo = LerInt("DIGITE O VALOR QUE VOCÊ QUER ADICIONAR NA SUA CARTEIRA: $");
             if (saldo == 0)
             {
                 _estado = Estado.Menu;
@@ -104,19 +92,19 @@ class Program
             else
             {
 
-                _jogador.AdicionarDinheiro(saldo);
+                Jogador.AdicionarDinheiro(saldo);
                 _estado = Estado.Apostar;
                 return;
             }
         }
     }
 
-    public static void Apostar()
+    private static void Apostar()
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine($"VALOR ATUAL DA SUA CARTEIRA: ${_jogador.Saldo}");
+            Console.WriteLine($"VALOR ATUAL DA SUA CARTEIRA: ${Jogador.Saldo}");
             Console.WriteLine("\nDIGITE 0 (ZERO) PARA SAIR\n");
             _valorAposta = LerInt("DIGITE QUANTO VOCÊ QUER APOSTAR: $");
 
@@ -126,7 +114,7 @@ class Program
                 return;
             }
 
-            else if (_valorAposta < 0 || _valorAposta > _jogador.Saldo)
+            else if (_valorAposta < 0 || _valorAposta > Jogador.Saldo)
             {
                 Console.Clear();
                 Console.WriteLine("SALDO INVÁLIDO, APERTE ENTER PARA DIGITAR NOVAMENTE.");
@@ -141,25 +129,25 @@ class Program
         }
     }
 
-    public static void Apostando()
+    private static void Apostando()
     {
         while (true)
         {
-            Console.WriteLine("APERTE 'S' PARA SAIR.");
+            Console.WriteLine("APERTE \"S\" PARA SAIR.");
             Console.WriteLine($"VALOR APOSTA ${_valorAposta}");
-            Console.WriteLine($"DINHEIRO ATUAL: ${_jogador.Saldo}");
+            Console.WriteLine($"DINHEIRO ATUAL: ${Jogador.Saldo}");
             Console.WriteLine("\nAPERTE ENTER PARA JOGAR!");
-            ConsoleKeyInfo key = Console.ReadKey();
+            var key = Console.ReadKey();
             if (key.Key == ConsoleKey.S)
             {
                 _estado = Estado.Apostar;
                 return;
             }
 
-            _jogador.Bet(_valorAposta);
+            Jogador.Bet(_valorAposta);
             AtualizarTela();
 
-            if (_jogador.Saldo == 0)
+            if (Jogador.Saldo == 0)
             {
                 Console.WriteLine("SEU DINHEIRO ACABOU! VOLTANDO PARA A TELA DE DEPÓSITO");
                 Thread.Sleep(3000);
@@ -170,15 +158,15 @@ class Program
     }
 
 
-    public static void AtualizarTela()
+    private static void AtualizarTela()
     {
-        int aleatorio = _rnd.Next(0, _onScreen.Count);
-        int aleatorio2 = _rnd.Next(0, _onScreen.Count);
-        int aleatorio3 = _rnd.Next(0, _onScreen.Count);
+        var aleatorio = Rnd.Next(0, OnScreen.Count);
+        var aleatorio2 = Rnd.Next(0, OnScreen.Count);
+        var aleatorio3 = Rnd.Next(0, OnScreen.Count);
 
-        Slot sorteio1 = _onScreen[aleatorio];
-        Slot sorteio2 = _onScreen[aleatorio2];
-        Slot sorteio3 = _onScreen[aleatorio3];
+        var sorteio1 = OnScreen[aleatorio];
+        var sorteio2 = OnScreen[aleatorio2];
+        var sorteio3 = OnScreen[aleatorio3];
 
         Console.Clear();
         Console.WriteLine("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
@@ -191,28 +179,28 @@ class Program
         }
     }
 
-    public static void Recompensa(int multiplicador)
+    private static void Recompensa(int multiplicador)
     {
-        int ganho = _valorAposta * multiplicador;
+        var ganho = _valorAposta * multiplicador;
 
-        _jogador.AdicionarDinheiro(ganho);
+        Jogador.AdicionarDinheiro(ganho);
 
-        int dinheiroAntes = _jogador.Saldo - ganho;
+        var dinheiroAntes = Jogador.Saldo - ganho;
 
         Console.WriteLine($"PARABÉNS! VOCÊ GANHOU UM MULTIPLICADOR DE {multiplicador}x, APOSTANDO ${_valorAposta} DA UM GANHO DE ${ganho}");
         Console.WriteLine($"DINHEIRO ANTES DO GANHO ${dinheiroAntes}");
-        Console.WriteLine($"DINHEIRO DEPOIS DO GANHO ${_jogador.Saldo}\n");
+        Console.WriteLine($"DINHEIRO DEPOIS DO GANHO ${Jogador.Saldo}\n");
     }
 
 
-    public static int LerInt(string msg)
+    private static int LerInt(string msg)
     {
         while (true)
         {
             Console.Write(msg);
-            string input = Console.ReadLine().Trim();
+            var input = Console.ReadLine()?.Trim();
 
-            if (int.TryParse(input, out int inteiro))
+            if (int.TryParse(input, out var inteiro))
             {
                 return inteiro;
             }
