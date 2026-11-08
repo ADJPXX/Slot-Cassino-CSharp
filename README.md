@@ -21,11 +21,12 @@ Também é possível abrir `Slot_cassino.sln` em uma IDE compatível com projeto
 
 ## Como jogar
 
-1. No menu, selecione `1` para iniciar. A carteira começa com saldo zero.
-2. Informe um valor inteiro positivo para adicionar à carteira. Digite `0` para voltar ao menu.
-3. Informe uma aposta inteira, maior que zero e dentro do saldo disponível. Digite `0` para voltar à tela de depósito.
-4. Pressione Enter para girar. O programa mantém a aposta selecionada nos giros seguintes; pressione `S` para voltar à tela de aposta.
-5. Para encerrar, volte ao menu e selecione `0`.
+1. Ao iniciar o programa, a carteira começa com saldo zero. No menu, selecione `1` para iniciar o jogo.
+2. Informe um nome não vazio para o jogador.
+3. Informe um valor inteiro positivo para adicionar à carteira. O depósito é somado ao saldo atual; digite `0` para voltar ao menu.
+4. Informe uma aposta inteira, maior que zero e dentro do saldo disponível. Digite `0` para voltar à tela de depósito.
+5. Pressione Enter para girar. O programa mantém a aposta selecionada nos giros seguintes; pressione `S` para voltar à tela de aposta.
+6. Para encerrar, volte ao menu e selecione `0`.
 
 O código atual trata qualquer tecla diferente de `S` como um giro, embora a tela solicite Enter.
 
@@ -62,7 +63,7 @@ O workflow `Build Release` é iniciado manualmente (`workflow_dispatch`). Ele re
 
 ## Limitações conhecidas
 
-- O nome do jogador está fixado no código e o saldo não é salvo entre execuções.
+- O nome é solicitado ao iniciar o jogo; nome e saldo não são salvos entre execuções.
 - Valores de saldo e aposta são inteiros; não há casas decimais.
 - O jogador é criado com saldo inicial `-100000`, mas o construtor aceita apenas saldos positivos. Na prática, a carteira começa em zero.
 - Se uma aposta repetida ficar maior que o saldo restante, o débito é ignorado, mas o giro ainda acontece. Assim, esse giro pode conceder prêmio sem que a aposta tenha sido debitada.
