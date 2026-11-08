@@ -12,7 +12,7 @@ BOOST = 10x
 
 namespace Slot_cassino;
 
-class Slot
+public class Slot
 {
     public string Nome { get; set; }
     public int Multiplicador { get; set; }

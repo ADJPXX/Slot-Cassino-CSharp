@@ -1,6 +1,6 @@
 ﻿namespace Slot_cassino;
 
-class Jogador
+public class Jogador
 {
     public string Nome { get; set; }
     public int Saldo { get; private set; }

@@ -6,17 +6,17 @@ public static class Program
 
     private static Estado _estado = Estado.Menu;
 
-    private static readonly Random Rnd = new Random();
+    private static readonly Random Rnd = new();
 
-    private static readonly Slot Bar = new Slot("BAR", 2);
-    private static readonly Slot BarBar = new Slot("BAR BAR", 4);
-    private static readonly Slot BarBarBar = new Slot("BAR BAR BAR", 6);
-    private static readonly Slot Boost = new Slot("BOOST", 10);
-    private static readonly Slot TripleSeven = new Slot("777", 50);
+    private static readonly Slot Bar = new("BAR", 2);
+    private static readonly Slot BarBar = new("BAR BAR", 4);
+    private static readonly Slot BarBarBar = new("BAR BAR BAR", 6);
+    private static readonly Slot Boost = new("BOOST", 10);
+    private static readonly Slot TripleSeven = new("777", 50);
 
     private static readonly List<Slot> OnScreen = [Bar, BarBar, BarBarBar, Boost, TripleSeven];
 
-    private static readonly Jogador Jogador = new Jogador("Adriel", -100000);
+    private static readonly Jogador Jogador = new("", -100000);
 
     public static void Main(string[] args)
     {
@@ -25,9 +25,10 @@ public static class Program
             switch (_estado)
             {
                 case Estado.Menu: Menu(); break;
-                case Estado.NovoJogo: NovoJogo(); break;
-                case Estado.Apostar: Apostar(); break;
-                case Estado.Apostando: Apostando(); break;
+                case Estado.NovoJogo: NewGame(); break;
+                case Estado.Apostar: Bet(); break;
+                case Estado.Apostando: Betting(); break;
+                case Estado.Sair: break;
             }
         }
     }
@@ -43,7 +44,7 @@ public static class Program
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("[ 1 ]NOVO JOGO");
             Console.WriteLine("[ 0 ]SAIR");
-            var opcao = LerInt("ESCOLHA SUA OPÇÃO: ");
+            var opcao = ReadInt("ESCOLHA SUA OPÇÃO: ");
 
             if (opcao == 0)
             {
@@ -54,36 +55,51 @@ public static class Program
                 return;
             }
 
-            else if (opcao == 1)
+            if (opcao == 1)
             {
+                Console.Clear();
+                while (true)
+                {
+                    var playerName = ReadString("Digite o nome do jogador: ");
+
+                    if (playerName != null)
+                    {
+                        Jogador.Nome = playerName;
+
+                        break;
+                    }
+
+                    Console.Clear();
+
+                    Console.WriteLine("Digite um nome válido.");
+                }
+
                 _estado = Estado.NovoJogo;
+
                 return;
             }
 
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("OPÇÃO INVÁLIDA");
-                Console.WriteLine("APERTE ENTER PARA ESCOLHER OUTRA OPÇÃO.");
-                Console.ReadKey();
-            }
+            Console.Clear();
+            Console.WriteLine("OPÇÃO INVÁLIDA");
+            Console.WriteLine("APERTE ENTER PARA ESCOLHER OUTRA OPÇÃO.");
+            Console.ReadKey();
         }
     }
 
-    private static void NovoJogo()
+    private static void NewGame()
     {
         while (true)
         {
             Console.Clear();
             Console.WriteLine("DIGITE 0 (ZERO) PARA SAIR.\n");
-            var saldo = LerInt("DIGITE O VALOR QUE VOCÊ QUER ADICIONAR NA SUA CARTEIRA: $");
+            var saldo = ReadInt("DIGITE O VALOR QUE VOCÊ QUER ADICIONAR NA SUA CARTEIRA: $");
             if (saldo == 0)
             {
                 _estado = Estado.Menu;
                 return;
             }
 
-            else if (saldo < 0)
+            if (saldo < 0)
             {
                 Console.Clear();
                 Console.WriteLine("SALDO INVÁLIDO, APERTE ENTER PARA DIGITAR NOVAMENTE.");
@@ -99,14 +115,14 @@ public static class Program
         }
     }
 
-    private static void Apostar()
+    private static void Bet()
     {
         while (true)
         {
             Console.Clear();
             Console.WriteLine($"VALOR ATUAL DA SUA CARTEIRA: ${Jogador.Saldo}");
             Console.WriteLine("\nDIGITE 0 (ZERO) PARA SAIR\n");
-            _valorAposta = LerInt("DIGITE QUANTO VOCÊ QUER APOSTAR: $");
+            _valorAposta = ReadInt("DIGITE QUANTO VOCÊ QUER APOSTAR: $");
 
             if (_valorAposta == 0)
             {
@@ -114,7 +130,7 @@ public static class Program
                 return;
             }
 
-            else if (_valorAposta < 0 || _valorAposta > Jogador.Saldo)
+            if (_valorAposta < 0 || _valorAposta > Jogador.Saldo)
             {
                 Console.Clear();
                 Console.WriteLine("SALDO INVÁLIDO, APERTE ENTER PARA DIGITAR NOVAMENTE.");
@@ -129,11 +145,12 @@ public static class Program
         }
     }
 
-    private static void Apostando()
+    private static void Betting()
     {
         while (true)
         {
             Console.WriteLine("APERTE \"S\" PARA SAIR.");
+            Console.WriteLine($"JOGADOR ATUAL: {Jogador.Nome}");
             Console.WriteLine($"VALOR APOSTA ${_valorAposta}");
             Console.WriteLine($"DINHEIRO ATUAL: ${Jogador.Saldo}");
             Console.WriteLine("\nAPERTE ENTER PARA JOGAR!");
@@ -145,20 +162,22 @@ public static class Program
             }
 
             Jogador.Bet(_valorAposta);
-            AtualizarTela();
+            UpdateScreen();
 
-            if (Jogador.Saldo == 0)
+            if (Jogador.Saldo != 0)
             {
-                Console.WriteLine("SEU DINHEIRO ACABOU! VOLTANDO PARA A TELA DE DEPÓSITO");
-                Thread.Sleep(3000);
-                _estado = Estado.NovoJogo;
-                return;
+                continue;
             }
+
+            Console.WriteLine("SEU DINHEIRO ACABOU! VOLTANDO PARA A TELA DE DEPÓSITO");
+            Thread.Sleep(3000);
+            _estado = Estado.NovoJogo;
+            return;
         }
     }
 
 
-    private static void AtualizarTela()
+    private static void UpdateScreen()
     {
         var aleatorio = Rnd.Next(0, OnScreen.Count);
         var aleatorio2 = Rnd.Next(0, OnScreen.Count);
@@ -175,11 +194,11 @@ public static class Program
 
         if (sorteio1 == sorteio2 && sorteio2 == sorteio3)
         {
-            Recompensa(sorteio1.Multiplicador);
+            Reward(sorteio1.Multiplicador);
         }
     }
 
-    private static void Recompensa(int multiplicador)
+    private static void Reward(int multiplicador)
     {
         var ganho = _valorAposta * multiplicador;
 
@@ -193,7 +212,7 @@ public static class Program
     }
 
 
-    private static int LerInt(string msg)
+    private static int ReadInt(string msg)
     {
         while (true)
         {
@@ -204,6 +223,29 @@ public static class Program
             {
                 return inteiro;
             }
+        }
+    }
+
+
+    private static string ReadString(string msg)
+    {
+        try
+        {
+            while (true)
+            {
+                Console.Write(msg);
+
+                var str = Console.ReadLine()?.Trim();
+
+                if (!string.IsNullOrWhiteSpace(str))
+                {
+                    return str;
+                }
+            }
+        }
+        catch
+        {
+            return null;
         }
     }
 }
